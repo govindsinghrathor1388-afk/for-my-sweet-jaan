@@ -429,10 +429,22 @@
     border-radius: 15px;
     box-shadow: 0 0 50px rgba(255, 100, 150, 0.5);
 }
+
+.video-note {
+    font-style: italic;
+    opacity: 0.8;
+    text-align: center;
+    display: none; /* Pehle se hidden rahega */
+}
     </style>
 </head>
 
 <body>
+
+    <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #2a0a2a; display: flex; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="text-gradient text-2xl">Loading your surprise... 💖</div>
+    </div>
+
     <div id="aurora-background"></div>
     <div id="canvas-container" style="position: fixed; top: 0; left: 0; z-index: 1;"></div>
 
@@ -516,8 +528,8 @@
                 </h2>
 
                 <p class="anim-child text-gray-300 mb-8 text-lg">
-                   Ye kuch songs tumhari importance or taarif me💕  
-                    Hope tumko pasand aayenge 👀❤️
+                    Do dhadkanein, do sur — ek mere tanhai ke, ek tumhare saath ke 💕  
+                    Toggle karo aur mehsoos karo farq — meri Aanya ❤️
                 </p>
 
                 <div class="anim-child flex flex-col md:flex-row items-center justify-center gap-6">
@@ -586,9 +598,14 @@
 <p id="gift-instruction" class="anim-child text-gray-400 text-sm mb-4">Click the gift to unwrap your surprise! 👆</p>
 
    <!-- YEH LINE CHANGE KARO -->
-<video id="surprise-video" class="final-video video-hidden" muted loop onclick="toggleVideoPlay()">
+<video id="surprise-video" class="final-video video-hidden" controls>
     <source src="Cakevideo.mp4" type="video/mp4">
 </video>
+
+<!-- YEH NAYA TEXT ADD KARO -->
+<p class="video-note anim-child text-yellow-400 text-gray-400 text-xs mt-2">
+    This video may lag, play it again & again! 🔄
+</p>
     
                 <button id="confetti-btn" class="anim-child btn text-white mt-4" onclick="playCelebrationAndConfetti()">Let's Celebrate!</button>
                 <footer class="anim-child mt-2 text-gray-500 text-sm">
@@ -632,7 +649,7 @@
                 const geometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
                 const colors = [0xff6e8e, 0xff3879, 0xfc94af, 0xffc0cb, 0xe82979, 0xd06eff, 0xffa0c7];
 
-                for (let i = 0; i < 30; i++) {
+                for (let i = 0; i < 15; i++) {
                     const material = new THREE.MeshPhongMaterial({ 
                         color: colors[Math.floor(Math.random() * colors.length)], 
                         emissive: 0x181818, 
@@ -898,25 +915,20 @@ function playCelebrationAndConfetti() {
 function revealVideo() {
     const gift = document.querySelector('.gift-emoji');
     const video = document.getElementById('surprise-video');
-    const instruction = document.getElementById('gift-instruction'); // NAYA LINE
-
+    const instruction = document.getElementById('gift-instruction');
+    
     gift.style.display = 'none';
-    instruction.style.display = 'none'; // NAYA LINE - instruction hat jayega
+    instruction.style.display = 'none';
     video.classList.remove('video-hidden');
-    
-    video.muted = false;
-    video.play(); // Pehli baar automatically play hoga
-}
 
-function toggleVideoPlay() {
-    const video = document.getElementById('surprise-video');
-    
-    if (video.paused) {
-        video.play();
-    } else {
-        video.pause();
+     // Naya text bhi show karo
+    const videoNote = document.querySelector('.video-note');
+    if(videoNote) {
+        videoNote.style.display = 'block';
     }
 }
+    
+    // Bas show karo, browser khud manage karega
 
 function openLoveLetter() {
     const overlay = document.getElementById('letter-overlay');
@@ -964,6 +976,18 @@ function closeLoveLetter() {
             );
         }
     });
+}
+// Page load hone pe loading screen hat jayega
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        document.getElementById('loading-screen').style.display = 'none';
+    }, 2000);
+});
+
+function restartVideo() {
+    const video = document.getElementById('surprise-video');
+    video.currentTime = 0; // Start pe wapas
+    video.play(); // Dobara play
 }
     </script>
 
